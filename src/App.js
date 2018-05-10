@@ -1,16 +1,11 @@
 import React from 'react';
 import './App.css';
+import Question from './Question';
 
 function App() {
   return (
     <div className="page">
-      <h1 className="title">My Five Minute Journal </h1>
-      <div className="question">
-        <h2>Today I am grateful for:</h2>
-        <p>1)</p>
-        <p>2)</p>
-        <p>3)</p>
-      </div>
+      <Question text="Today I am greatful for:" />
       <hr />
       <div className="answers">
         <div className="answer">
