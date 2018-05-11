@@ -11,9 +11,11 @@ function Question(props) {
         <p>
           2){'  '} <input type="text" />
         </p>
-        <p>
-          3){'  '} <input type="text" />
-        </p>
+        {props.numAnswers === 3 && (
+          <p>
+            3){'  '} <input type="text" />
+          </p>
+        )}
         <input type="submit" value="add" />
       </form>
     </div>

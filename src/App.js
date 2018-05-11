@@ -4,6 +4,29 @@ import Question from './Question';
 import JOURNAL_ENTRIES from './journalEntriesData';
 import JournalEntry from './JournalEntry';
 
+const journalQuestions = {
+  gratefulFor: {
+    text: 'Today I am grateful for...',
+    numAnswers: 3
+  },
+  todayGreat: {
+    text: "Here's what would make today great...",
+    numAnswers: 3
+  },
+  affirmations: {
+    text: "Today's Affirmations: I am...",
+    numAnswers: 2
+  },
+  amazing: {
+    text: 'Here are 3 amazing things that happened today...',
+    numAnswers: 3
+  },
+  better: {
+    text: 'What could I have done to make today even better?',
+    numAnswers: 2
+  }
+};
+
 class App extends React.Component {
   // app will have the state because it gets modified from Question
   // and needs to update the journal entries div.
@@ -20,16 +43,32 @@ class App extends React.Component {
   // the time of day.
   constructor(props) {
     super(props);
-    this.state = JOURNAL_ENTRIES;
+    const questions = [
+      journalQuestions.gratefulFor,
+      journalQuestions.todayGreat,
+      journalQuestions.affirmations,
+      journalQuestions.amazing,
+      journalQuestions.better
+    ];
+    const currentQuestion = 4;
+    this.state = {
+      question: questions[currentQuestion],
+      journalEntries: JOURNAL_ENTRIES
+    };
   }
   render() {
     return (
       <div className="page">
         <h1 className="title">My Five Minute Journal </h1>
-        <Question text="Today I am grateful for:" />
+        <Question
+          text={this.state.question.text}
+          numAnswers={this.state.question.numAnswers}
+        />
         <hr />
         <div className="answers">
-          {this.state.map(entry => <JournalEntry value={entry} />)}
+          {this.state.journalEntries.map(entry => (
+            <JournalEntry value={entry} />
+          ))}
         </div>
       </div>
     );
