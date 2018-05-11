@@ -71,11 +71,14 @@ class App extends React.Component {
   }
 
   handleSubmit() {
-    this.currentQuestion++;
+    if (this.currentQuestion === this.questions.length - 1) {
+      this.currentQuestion = 0;
+    } else {
+      this.currentQuestion++;
+    }
     this.setState({
       question: this.questions[this.currentQuestion]
     });
-    alert('exiting App.handleSubmit()');
   }
 
   render() {

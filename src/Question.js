@@ -49,13 +49,13 @@ class Question extends React.Component {
               onChange={this.handleInputChange}
             />
           </p>
-          {this.props.answers.third && (
+          {this.props.answers.hasOwnProperty('third') && (
             <p>
               3){'  '}
               <input
                 name="third"
                 type="text"
-                value={this.state.answers.third}
+                value={this.props.answers.third}
                 onChange={this.handleInputChange}
               />
             </p>

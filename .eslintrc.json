@@ -28,6 +28,7 @@
     "comma-dangle": "off",
     "prefer-destructuring": "off",
     "no-alert": "off",
-    "no-plusplus": "off"
+    "no-plusplus": "off",
+    "no-prototype-builtins": "off"
   }
 }
