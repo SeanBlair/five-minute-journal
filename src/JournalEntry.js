@@ -5,10 +5,12 @@ import MorningEntry from './MorningEntry';
 function JournalEntry(props) {
   return (
     <div>
-      <h2>{props.value.date}</h2>
-      <NightEntry value={props.value.nightEntry} />
+      {props.value.date && <h2>{props.value.date}</h2>}
+      {props.value.nightEntry && <NightEntry value={props.value.nightEntry} />}
       <hr />
-      <MorningEntry value={props.value.morningEntry} />
+      {props.value.morningEntry && (
+        <MorningEntry value={props.value.morningEntry} />
+      )}
       <hr />
     </div>
   );

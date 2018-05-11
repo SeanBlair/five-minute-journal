@@ -38,18 +38,6 @@ const JOURNAL_ENTRIES = [
       ],
       affirmations: ['bla bla bal', 'bla bla bla blalbal']
     }
-  },
-  {
-    date: null,
-    nightEntry: {
-      amazing: [],
-      better: []
-    },
-    morningEntry: {
-      gratefulFor: [],
-      todayGreat: [],
-      affirmations: []
-    }
   }
 ];
 
