@@ -50,7 +50,7 @@ class App extends React.Component {
       journalQuestions.amazing,
       journalQuestions.better
     ];
-    const currentQuestion = 4;
+    const currentQuestion = 1;
     this.state = {
       question: questions[currentQuestion],
       journalEntries: JOURNAL_ENTRIES
