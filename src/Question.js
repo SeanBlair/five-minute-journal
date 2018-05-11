@@ -7,14 +7,6 @@ class Question extends React.Component {
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  // handleInputChange(event) {
-  //   const name = event.target.name;
-  //   const value = event.target.value;
-  //   this.setState({
-  //     [name]: value
-  //   });
-  // }
-
   handleInputChange(event) {
     const name = event.target.name;
     const value = event.target.value;
@@ -32,7 +24,7 @@ class Question extends React.Component {
         <h2>{this.props.text}</h2>
         <form onSubmit={this.handleSubmit}>
           <p>
-            1){'  '}
+            1){' '}
             <input
               name="first"
               type="text"
@@ -41,7 +33,7 @@ class Question extends React.Component {
             />
           </p>
           <p>
-            2){'  '}
+            2){' '}
             <input
               name="second"
               type="text"
@@ -51,7 +43,7 @@ class Question extends React.Component {
           </p>
           {this.props.answers.hasOwnProperty('third') && (
             <p>
-              3){'  '}
+              3){' '}
               <input
                 name="third"
                 type="text"

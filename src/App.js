@@ -4,29 +4,7 @@ import './App.css';
 import Question from './Question';
 import JOURNAL_ENTRIES from './journalEntriesData';
 import JournalEntry from './JournalEntry';
-
-const journalQuestions = {
-  gratefulFor: {
-    text: 'Today I am grateful for...',
-    answers: { first: '', second: '', third: '' }
-  },
-  todayGreat: {
-    text: "Here's what would make today great...",
-    answers: { first: '', second: '', third: '' }
-  },
-  affirmations: {
-    text: "Today's Affirmations: I am...",
-    answers: { first: '', second: '' }
-  },
-  amazing: {
-    text: 'Here are 3 amazing things that happened today...',
-    answers: { first: '', second: '', third: '' }
-  },
-  better: {
-    text: 'What could I have done to make today even better?',
-    answers: { first: '', second: '' }
-  }
-};
+import journalQuestions from './journal-questions';
 
 class App extends React.Component {
   // app will have the state because it gets modified from Question
@@ -42,6 +20,11 @@ class App extends React.Component {
 
   // TODO: select correct question to display given the questions entered,
   // the time of day.
+
+  // TODO: Use "Today" for today's entry, "Monday, October 7th" for yesterday and previous
+
+  // TODO: Color different day's slightly different. Also color same day's morning / night
+  // sections slightly different.
 
   constructor(props) {
     super(props);
