@@ -1,4 +1,5 @@
 import React from 'react';
+import update from 'immutability-helper';
 import './App.css';
 import Question from './Question';
 import JOURNAL_ENTRIES from './journalEntriesData';
@@ -61,21 +62,20 @@ class App extends React.Component {
   }
 
   handleInputChange(name, value) {
-    this.setState((prev) => {
-      const question = Object.assign({}, prev.question);
-      question.answers[name] = value;
-      return {
-        question
-      };
+    const question = update(this.state.question, {
+      answers: { [name]: { $set: value } }
+    });
+    this.setState({
+      question
     });
   }
 
-  handleSubmit(answers) {
+  handleSubmit() {
     this.currentQuestion++;
     this.setState({
       question: this.questions[this.currentQuestion]
     });
-    alert(answers);
+    alert('exiting App.handleSubmit()');
   }
 
   render() {
