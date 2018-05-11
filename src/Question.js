@@ -3,31 +3,26 @@ import React from 'react';
 class Question extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      answer1: '',
-      answer2: ''
-    };
-    if (this.props.numAnswers === 3) {
-      this.state.answer3 = '';
-    }
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
+  // handleInputChange(event) {
+  //   const name = event.target.name;
+  //   const value = event.target.value;
+  //   this.setState({
+  //     [name]: value
+  //   });
+  // }
+
   handleInputChange(event) {
     const name = event.target.name;
     const value = event.target.value;
-    this.setState({
-      [name]: value
-    });
+    this.props.onInputChange(name, value);
   }
 
   handleSubmit(event) {
-    alert(`Just submitted a journal question with the following answers ${
-      this.state.answer1
-    }, ${this.state.answer2}${
-      this.state.answer3 ? `, ${this.state.answer3}` : ''
-    }`);
+    this.props.onSubmit();
     event.preventDefault();
   }
 
@@ -39,28 +34,28 @@ class Question extends React.Component {
           <p>
             1){'  '}
             <input
-              name="answer1"
+              name="first"
               type="text"
-              value={this.state.answer1}
+              value={this.props.answers.first}
               onChange={this.handleInputChange}
             />
           </p>
           <p>
             2){'  '}
             <input
-              name="answer2"
+              name="second"
               type="text"
-              value={this.state.answer2}
+              value={this.props.answers.second}
               onChange={this.handleInputChange}
             />
           </p>
-          {this.props.numAnswers === 3 && (
+          {this.props.answers.third && (
             <p>
               3){'  '}
               <input
-                name="answer3"
+                name="third"
                 type="text"
-                value={this.state.answer3}
+                value={this.state.answers.third}
                 onChange={this.handleInputChange}
               />
             </p>

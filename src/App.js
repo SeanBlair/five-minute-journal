@@ -7,23 +7,23 @@ import JournalEntry from './JournalEntry';
 const journalQuestions = {
   gratefulFor: {
     text: 'Today I am grateful for...',
-    numAnswers: 3
+    answers: { first: '', second: '', third: '' }
   },
   todayGreat: {
     text: "Here's what would make today great...",
-    numAnswers: 3
+    answers: { first: '', second: '', third: '' }
   },
   affirmations: {
     text: "Today's Affirmations: I am...",
-    numAnswers: 2
+    answers: { first: '', second: '' }
   },
   amazing: {
     text: 'Here are 3 amazing things that happened today...',
-    numAnswers: 3
+    answers: { first: '', second: '', third: '' }
   },
   better: {
     text: 'What could I have done to make today even better?',
-    numAnswers: 2
+    answers: { first: '', second: '' }
   }
 };
 
@@ -41,28 +41,52 @@ class App extends React.Component {
 
   // TODO: select correct question to display given the questions entered,
   // the time of day.
+
   constructor(props) {
     super(props);
-    const questions = [
+    this.questions = [
       journalQuestions.gratefulFor,
       journalQuestions.todayGreat,
       journalQuestions.affirmations,
       journalQuestions.amazing,
       journalQuestions.better
     ];
-    const currentQuestion = 1;
+    this.currentQuestion = 0;
     this.state = {
-      question: questions[currentQuestion],
+      question: this.questions[this.currentQuestion],
       journalEntries: JOURNAL_ENTRIES
     };
+    this.handleInputChange = this.handleInputChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
   }
+
+  handleInputChange(name, value) {
+    this.setState((prev) => {
+      const question = Object.assign({}, prev.question);
+      question.answers[name] = value;
+      return {
+        question
+      };
+    });
+  }
+
+  handleSubmit(answers) {
+    this.currentQuestion++;
+    this.setState({
+      question: this.questions[this.currentQuestion]
+    });
+    alert(answers);
+  }
+
   render() {
     return (
       <div className="page">
         <h1 className="title">My Five Minute Journal </h1>
         <Question
           text={this.state.question.text}
-          numAnswers={this.state.question.numAnswers}
+          answers={this.state.question.answers}
+          onInputChange={this.handleInputChange}
+          onSubmit={this.handleSubmit}
         />
         <hr />
         <div className="answers">
