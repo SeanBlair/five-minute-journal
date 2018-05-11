@@ -1,4 +1,7 @@
+body {
+  background-color: lightblue;
+}
+
 .page {
   text-align: center;
-  background-color: lightblue;
 }
