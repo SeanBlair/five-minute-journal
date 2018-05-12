@@ -1,6 +1,13 @@
+let yesterday = new Date();
+let dayBefore = new Date();
+dayBefore.setDate(dayBefore.getDate() - 2);
+yesterday.setDate(yesterday.getDate() - 1);
+yesterday = yesterday.toDateString();
+dayBefore = dayBefore.toDateString();
+
 const JOURNAL_ENTRIES = [
   {
-    date: 'Today',
+    date: yesterday,
     nightEntry: {
       amazing: [
         'Did the tweaked out rock to fakie!',
@@ -20,7 +27,7 @@ const JOURNAL_ENTRIES = [
     }
   },
   {
-    date: 'Yesterday',
+    date: dayBefore,
     nightEntry: {
       amazing: [
         'ljasdf lkjasd fflkj asdflk asdflk asdf',

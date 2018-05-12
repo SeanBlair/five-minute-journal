@@ -59,8 +59,51 @@ class App extends React.Component {
     } else {
       this.currentQuestion++;
     }
+    const today = new Date().toDateString();
+    // const yesterday = new Date();
+    // yesterday.setDate(yesterday.getDate() - 1);
+    // if (today.toDateString() === yesterday.toDateString()) {
+    //   alert('Today === yesterday');
+    // } else {
+    //   alert('Today does not equal yesterday');
+    // }
+    let newEntries;
+    const question = this.state.question;
+    const answers = [question.answers.first, question.answers.second];
+    if (question.answers.third) {
+      answers.push(question.answers.third);
+    }
+
+    if (this.state.journalEntries.length > 0) {
+      const firstEntriesDate = this.state.journalEntries[0].date;
+      if (today === firstEntriesDate) {
+        // TODO fix bug where first nightEntry crashes as it doesn't
+        // exist.  check if exists, then create it... update twice??
+        if (!this.state.journalEntries[0].hasOwnProperty(question.type)) {
+          newEntries = update(this.state.journalEntries, {
+            0: { [question.type]: { $set: {} } }
+          });
+          newEntries = update(newEntries, {
+            0: { [question.type]: { [question.name]: { $set: answers } } }
+          });
+        } else {
+          newEntries = update(this.state.journalEntries, {
+            0: { [question.type]: { [question.name]: { $set: answers } } }
+          });
+        }
+      } else {
+        const entry = {
+          date: today,
+          [question.type]: {
+            [question.name]: answers
+          }
+        };
+        newEntries = update(this.state.journalEntries, { $unshift: [entry] });
+      }
+    }
     this.setState({
-      question: this.questions[this.currentQuestion]
+      question: this.questions[this.currentQuestion],
+      journalEntries: newEntries
     });
   }
 
