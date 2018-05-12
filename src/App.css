@@ -5,3 +5,16 @@ body {
 .page {
   text-align: center;
 }
+
+.answers {
+  width: 75%;
+  margin: auto;
+}
+
+.even {
+  background-color: lightcoral;
+}
+
+.odd {
+  background-color: lightsalmon;
+}

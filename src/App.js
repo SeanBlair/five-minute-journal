@@ -7,24 +7,14 @@ import JournalEntry from './JournalEntry';
 import journalQuestions from './journal-questions';
 
 class App extends React.Component {
-  // app will have the state because it gets modified from Question
-  // and needs to update the journal entries div.
-  // the state will get loaded from HTML local storage on page load...
-  // on update both the local storage and the state will get modified.
-  // App will know which is the next Question to display.
+  // TODO: select correct question to display given the time of day?
 
-  // TODO: implement adding new entry. Basically show a specific question,
-  // implement a 'submit' handler that adds a new entry in state.
-  // On new entry submitted, either create new entry if first question
-  // answered of today, or add to already existing entry.
-
-  // TODO: select correct question to display given the questions entered,
-  // the time of day.
-
-  // TODO: Use "Today" for today's entry, "Monday, October 7th" for yesterday and previous
-
-  // TODO: Color different day's slightly different. Also color same day's morning / night
+  // TODO: color same day's morning / night
   // sections slightly different.
+
+  // TODO: Implement storage such that previous posts are displayed on page reload.
+
+  // TODO add key's to collections.
 
   constructor(props) {
     super(props);
@@ -60,13 +50,6 @@ class App extends React.Component {
       this.currentQuestion++;
     }
     const today = new Date().toDateString();
-    // const yesterday = new Date();
-    // yesterday.setDate(yesterday.getDate() - 1);
-    // if (today.toDateString() === yesterday.toDateString()) {
-    //   alert('Today === yesterday');
-    // } else {
-    //   alert('Today does not equal yesterday');
-    // }
     let newEntries;
     const question = this.state.question;
     const answers = [question.answers.first, question.answers.second];
@@ -77,8 +60,6 @@ class App extends React.Component {
     if (this.state.journalEntries.length > 0) {
       const firstEntriesDate = this.state.journalEntries[0].date;
       if (today === firstEntriesDate) {
-        // TODO fix bug where first nightEntry crashes as it doesn't
-        // exist.  check if exists, then create it... update twice??
         if (!this.state.journalEntries[0].hasOwnProperty(question.type)) {
           newEntries = update(this.state.journalEntries, {
             0: { [question.type]: { $set: {} } }
@@ -100,6 +81,15 @@ class App extends React.Component {
         };
         newEntries = update(this.state.journalEntries, { $unshift: [entry] });
       }
+    } else {
+      newEntries = [
+        {
+          date: today,
+          [question.type]: {
+            [question.name]: answers
+          }
+        }
+      ];
     }
     this.setState({
       question: this.questions[this.currentQuestion],
@@ -119,8 +109,8 @@ class App extends React.Component {
         />
         <hr />
         <div className="answers">
-          {this.state.journalEntries.map(entry => (
-            <JournalEntry value={entry} />
+          {this.state.journalEntries.map((entry, index) => (
+            <JournalEntry value={entry} id={index} />
           ))}
         </div>
       </div>
