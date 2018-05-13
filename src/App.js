@@ -2,7 +2,7 @@ import React from 'react';
 import update from 'immutability-helper';
 import './App.css';
 import Question from './Question';
-import JOURNAL_ENTRIES from './journalEntriesData';
+// import JOURNAL_ENTRIES from './journalEntriesData';
 import JournalEntry from './JournalEntry';
 import journalQuestions from './journal-questions';
 
@@ -23,10 +23,19 @@ class App extends React.Component {
       journalQuestions.amazing,
       journalQuestions.better
     ];
-    this.currentQuestion = 0;
+    this.currentQuestion = undefined;
+    let historicJournalEntries = localStorage.getItem('historicJournalEntries');
+    if (!historicJournalEntries) {
+      historicJournalEntries = { entries: []};
+      this.currentQuestion = 0;
+    } else {
+      historicJournalEntries = JSON.parse(historicJournalEntries);
+      this.currentQuestion = historicJournalEntries.currentQuestionNum;
+    }
     this.state = {
       question: this.questions[this.currentQuestion],
-      journalEntries: JOURNAL_ENTRIES
+      // journalEntries: JOURNAL_ENTRIES
+      journalEntries: historicJournalEntries.entries
     };
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -60,6 +69,7 @@ class App extends React.Component {
       if (today === firstEntriesDate) {
         if (!this.state.journalEntries[0].hasOwnProperty(question.type)) {
           newEntries = update(this.state.journalEntries, {
+            // currentQuestionNum: { $set: this.currentQuestion },
             0: { [question.type]: { $set: {} } }
           });
           newEntries = update(newEntries, {
@@ -67,7 +77,10 @@ class App extends React.Component {
           });
         } else {
           newEntries = update(this.state.journalEntries, {
-            0: { [question.type]: { [question.name]: { $set: answers } } }
+            // currentQuestionNum: { $set: this.currentQuestion },
+            0: {
+              [question.type]: { [question.name]: { $set: answers } }
+            }
           });
         }
       } else {
@@ -77,7 +90,10 @@ class App extends React.Component {
             [question.name]: answers
           }
         };
-        newEntries = update(this.state.journalEntries, { $unshift: [entry] });
+        newEntries = update(this.state.journalEntries, {
+          // currentQuestionNum: { $set: this.currentQuestion },
+          0: { $unshift: [entry] }
+        });
       }
     } else {
       newEntries = [
@@ -93,6 +109,17 @@ class App extends React.Component {
       question: this.questions[this.currentQuestion],
       journalEntries: newEntries
     });
+    // any time a set of answers is submitted, update historicJournalEntries value in
+    // localStorage. This will allow the page load to grab the latest state of the journal
+    // for display.
+    const storedEntries = {
+      currentQuestionNum: this.currentQuestion,
+      entries: newEntries
+    };
+    localStorage.setItem(
+      'historicJournalEntries',
+      JSON.stringify(storedEntries)
+    );
   }
 
   render() {
