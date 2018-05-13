@@ -10,11 +10,9 @@ class App extends React.Component {
   // TODO: select correct question to display given the time of day?
 
   // TODO: color same day's morning / night
-  // sections slightly different.
+  // sections slightly different?
 
   // TODO: Implement storage such that previous posts are displayed on page reload.
-
-  // TODO add key's to collections.
 
   constructor(props) {
     super(props);
@@ -107,10 +105,9 @@ class App extends React.Component {
           onInputChange={this.handleInputChange}
           onSubmit={this.handleSubmit}
         />
-        <hr />
         <div className="answers">
           {this.state.journalEntries.map((entry, index) => (
-            <JournalEntry value={entry} id={index} />
+            <JournalEntry value={entry} id={index} key={entry.date} />
           ))}
         </div>
       </div>

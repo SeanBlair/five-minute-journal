@@ -6,14 +6,14 @@ function NightEntry(props) {
     <div>
       {props.value.amazing && (
         <div>
-          <h2>{journalQuestions.amazing.text}</h2>
-          {props.value.amazing.map(answer => <p>{answer}</p>)}
+          <h3>{journalQuestions.amazing.text}</h3>
+          {props.value.amazing.map(answer => <p key={answer}>{answer}</p>)}
         </div>
       )}
       {props.value.better && (
         <div>
-          <h2>{journalQuestions.better.text}</h2>
-          {props.value.better.map(answer => <p>{answer}</p>)}
+          <h3>{journalQuestions.better.text}</h3>
+          {props.value.better.map(answer => <p key={answer}>{answer}</p>)}
         </div>
       )}
     </div>

@@ -6,20 +6,20 @@ function MorningEntry(props) {
     <div>
       {props.value.gratefulFor && (
         <div>
-          <h2>{journalQuestions.gratefulFor.text}</h2>
-          {props.value.gratefulFor.map(answer => <p>{answer}</p>)}
+          <h3>{journalQuestions.gratefulFor.text}</h3>
+          {props.value.gratefulFor.map(answer => <p key={answer}>{answer}</p>)}
         </div>
       )}
       {props.value.todayGreat && (
         <div>
-          <h2>{journalQuestions.todayGreat.text}</h2>
-          {props.value.todayGreat.map(answer => <p>{answer}</p>)}
+          <h3>{journalQuestions.todayGreat.text}</h3>
+          {props.value.todayGreat.map(answer => <p key={answer}>{answer}</p>)}
         </div>
       )}
       {props.value.affirmations && (
         <div>
-          <h2>{journalQuestions.affirmations.text}</h2>
-          {props.value.affirmations.map(answer => <p>{answer}</p>)}
+          <h3>{journalQuestions.affirmations.text}</h3>
+          {props.value.affirmations.map(answer => <p key={answer}>{answer}</p>)}
         </div>
       )}
     </div>

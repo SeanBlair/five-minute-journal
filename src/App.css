@@ -1,9 +1,10 @@
 body {
-  background-color: lightblue;
+  background-color: #008060;
+  text-align: center;
 }
 
-.page {
-  text-align: center;
+input {
+  background-color: #f0f8ff;
 }
 
 .answers {
@@ -11,10 +12,16 @@ body {
   margin: auto;
 }
 
+.answers div {
+  padding: 1%;
+  margin: 1%;
+  border-radius: 2%;
+}
+
 .even {
-  background-color: lightcoral;
+  background-color: #fdf5e6;
 }
 
 .odd {
-  background-color: lightsalmon;
+  background-color: #f0f8ff;
 }

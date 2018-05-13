@@ -24,7 +24,6 @@ class Question extends React.Component {
         <h2>{this.props.text}</h2>
         <form onSubmit={this.handleSubmit}>
           <p>
-            1){' '}
             <input
               name="first"
               type="text"
@@ -33,7 +32,6 @@ class Question extends React.Component {
             />
           </p>
           <p>
-            2){' '}
             <input
               name="second"
               type="text"
@@ -43,7 +41,6 @@ class Question extends React.Component {
           </p>
           {this.props.answers.hasOwnProperty('third') && (
             <p>
-              3){' '}
               <input
                 name="third"
                 type="text"

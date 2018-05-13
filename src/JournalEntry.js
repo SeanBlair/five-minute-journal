@@ -8,11 +8,9 @@ function JournalEntry(props) {
     <div className={evenOrOdd}>
       {props.value.date && <h2>{props.value.date}</h2>}
       {props.value.nightEntry && <NightEntry value={props.value.nightEntry} />}
-      <hr />
       {props.value.morningEntry && (
         <MorningEntry value={props.value.morningEntry} />
       )}
-      <hr />
     </div>
   );
 }

@@ -37,7 +37,7 @@ const JOURNAL_ENTRIES = [
       better: ['ljalsdkjflkasdf', 'lkjasdf']
     },
     morningEntry: {
-      gratefulFor: ['lkjasdf', 'kjadsf', 'lkjasdf'],
+      gratefulFor: ['lkjsdfasdf', 'kjadsf', 'lkjasdf'],
       todayGreat: [
         'lkjasdf lkjasdf ',
         'lkjsdf lkjasdfoiuw lkjasdflk asdf',
