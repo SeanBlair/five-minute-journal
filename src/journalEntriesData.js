@@ -5,18 +5,17 @@ yesterday.setDate(yesterday.getDate() - 1);
 yesterday = yesterday.toDateString();
 dayBefore = dayBefore.toDateString();
 
-const JOURNAL_ENTRIES = [
-  {
-    date: yesterday,
-    nightEntry: {
+const HISTORICAL_JOURNAL_ENTRIES = {
+  currentQuestionIndex: 0,
+  entries: [
+    {
+      date: 'yesterday',
       amazing: [
         'Did the tweaked out rock to fakie!',
         'Got a haircut appointment!',
         'Worked on my React app!'
       ],
-      better: ['Work on resume', 'Work on cover letter']
-    },
-    morningEntry: {
+      better: ['Work on resume', 'Work on cover letter'],
       gratefulFor: ['Emily', 'Canada', 'EI'],
       todayGreat: [
         'Finish resume',
@@ -24,19 +23,15 @@ const JOURNAL_ENTRIES = [
         'Do a tweaked out rock to fakie'
       ],
       affirmations: ['I am reasonably smart', "I'm a hard worker"]
-    }
-  },
-  {
-    date: dayBefore,
-    nightEntry: {
+    },
+    {
+      date: 'dayBefore',
       amazing: [
         'ljasdf lkjasd fflkj asdflk asdflk asdf',
         'lkasd lkjasdf lk sdalfkj asdf',
         'jklf;a ;lkjasdf lkjasdf asdf!'
       ],
-      better: ['ljalsdkjflkasdf', 'lkjasdf']
-    },
-    morningEntry: {
+      better: ['ljalsdkjflkasdf', 'lkjasdf'],
       gratefulFor: ['lkjsdfasdf', 'kjadsf', 'lkjasdf'],
       todayGreat: [
         'lkjasdf lkjasdf ',
@@ -45,7 +40,7 @@ const JOURNAL_ENTRIES = [
       ],
       affirmations: ['bla bla bal', 'bla bla bla blalbal']
     }
-  }
-];
+  ]
+};
 
-export default JOURNAL_ENTRIES;
+export default HISTORICAL_JOURNAL_ENTRIES;

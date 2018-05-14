@@ -7,18 +7,11 @@ import journalQuestions from './journal-questions';
 
 class App extends React.Component {
   // TODO: select correct question to display given the time of day?
-
   // TODO: color same day's morning / night
   // sections slightly different?
-
-  // TODO: Refactor for clarity and maintainability!!!
   // TODO: Add button to clear all journal entries from localStorage.
   // TODO: Fix answers border-radius when entry not full.
-  // TODO: Consider rethinking state + stored data to minimize moving parts.
-  // Re read https://reactjs.org/docs/thinking-in-react.html  prefer
-
   // TODO: focus on first answer of new question on submit.
-
   constructor(props) {
     super(props);
     this.questions = [
@@ -28,28 +21,81 @@ class App extends React.Component {
       journalQuestions.amazing,
       journalQuestions.better
     ];
-    // TODO: probably do not need this field as the info will always be
-    // available and correct in localStorage.getItem('historicJournalEntries').currentQuestionNum
-    // but don't want to query localStorage for next question num!!!
     this.currentQuestionIndex = 0;
     // Get journal state prior to this page load.
-    let historicJournalEntries = localStorage.getItem('historicJournalEntries');
+    let historicJournalState = localStorage.getItem('historicJournalState');
     // No previous journal entries saved.
-    if (!historicJournalEntries) {
-      historicJournalEntries = { entries: [] };
+    if (!historicJournalState) {
+      historicJournalState = {
+        currentQuestionIndex: this.currentQuestionIndex,
+        entries: []
+      };
     } else {
-      historicJournalEntries = JSON.parse(historicJournalEntries);
-      this.currentQuestionIndex = historicJournalEntries.currentQuestionNum;
+      historicJournalState = JSON.parse(historicJournalState);
+      this.currentQuestionIndex = historicJournalState.currentQuestionIndex;
     }
 
     this.state = {
       question: this.questions[this.currentQuestionIndex],
-      journalEntries: historicJournalEntries.entries
+      journalEntries: historicJournalState.entries
     };
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
+  // Returns an array containg all the current question's answer strings
+  getAnswersArray() {
+    const answersArray = [
+      this.state.question.answers.first,
+      this.state.question.answers.second
+    ];
+    if (this.state.question.answers.third) {
+      answersArray.push(this.state.question.answers.third);
+    }
+    return answersArray;
+  }
+
+  // Returns the current entries with the current question's answers added.
+  getUpdatedEntries() {
+    const today = new Date().toDateString();
+    const answers = this.getAnswersArray();
+    let updatedEntries;
+    // First journal entry
+    if (this.state.journalEntries.length === 0) {
+      updatedEntries = [
+        {
+          date: today,
+          [this.state.question.name]: answers
+        }
+      ];
+    } else {
+      const lastEntryDate = this.state.journalEntries[0].date;
+      // First entry for today
+      if (today !== lastEntryDate) {
+        // add new entry to journalEntries
+        updatedEntries = update(this.state.journalEntries, {
+          $unshift: [{ date: today, [this.state.question.name]: answers }]
+        });
+      } else {
+        // Today's entry has already been started.
+        updatedEntries = update(this.state.journalEntries, {
+          0: { [this.state.question.name]: { $set: answers } }
+        });
+      }
+    }
+    return updatedEntries;
+  }
+
+  // Sets the index of the next question to display.
+  incrementCurrentQuestionIndex() {
+    if (this.currentQuestionIndex === this.questions.length - 1) {
+      this.currentQuestionIndex = 0;
+    } else {
+      this.currentQuestionIndex++;
+    }
+  }
+
+  // Adds one character to one of the current question's answers
   handleInputChange(name, value) {
     const question = update(this.state.question, {
       answers: { [name]: { $set: value } }
@@ -59,79 +105,24 @@ class App extends React.Component {
     });
   }
 
+  // Adds the current question's answers to the journal, displays
+  // the next question and updates the localStorage data.
   handleSubmit() {
-    if (this.currentQuestionIndex === this.questions.length - 1) {
-      this.currentQuestionIndex = 0;
-    } else {
-      this.currentQuestionIndex++;
-    }
-    const today = new Date().toDateString();
-    let newEntries;
-    const question = this.state.question;
-    // answers to add
-    const answers = [question.answers.first, question.answers.second];
-    if (question.answers.third) {
-      answers.push(question.answers.third);
-    }
-
-    // Not first journal entry...  Is this necessary??
-    if (this.state.journalEntries.length > 0) {
-      const firstEntriesDate = this.state.journalEntries[0].date;
-      // Today's entry already started.
-      if (today === firstEntriesDate) {
-        // this can be avoided if initialized with both nightEntry and morningEntry
-        if (!this.state.journalEntries[0].hasOwnProperty(question.type)) {
-          newEntries = update(this.state.journalEntries, {
-            0: { [question.type]: { $set: {} } }
-          });
-          // add new question + answers
-          newEntries = update(newEntries, {
-            0: { [question.type]: { [question.name]: { $set: answers } } }
-          });
-          // see above to eliminate this duplicate code.
-        } else {
-          newEntries = update(this.state.journalEntries, {
-            0: { [question.type]: { [question.name]: { $set: answers } } }
-          });
-        }
-        // first entry for Today
-      } else {
-        // TODO: initialize both questionType objects to avoid extra logic above
-        const entry = {
-          date: today,
-          [question.type]: {
-            [question.name]: answers
-          }
-        };
-        // add new entry to journalEntries
-        newEntries = update(this.state.journalEntries, {
-          0: { $unshift: [entry] }
-        });
-      }
-      // this seems unnecessary
-    } else {
-      newEntries = [
-        {
-          date: today,
-          [question.type]: {
-            [question.name]: answers
-          }
-        }
-      ];
-    }
-    this.setState({
-      question: this.questions[this.currentQuestionIndex],
-      journalEntries: newEntries
-    });
-    // prepare to update entries in localStorage
-    const storedEntries = {
-      currentQuestionNum: this.currentQuestionIndex,
-      entries: newEntries
+    const updatedEntries = this.getUpdatedEntries();
+    this.incrementCurrentQuestionIndex();
+    // Create object for storing current state in localStorage
+    const updatedJournalState = {
+      currentQuestionIndex: this.currentQuestionIndex,
+      entries: updatedEntries
     };
     localStorage.setItem(
-      'historicJournalEntries',
-      JSON.stringify(storedEntries)
+      'historicJournalState',
+      JSON.stringify(updatedJournalState)
     );
+    this.setState({
+      question: this.questions[this.currentQuestionIndex],
+      journalEntries: updatedEntries
+    });
   }
 
   render() {
@@ -146,7 +137,7 @@ class App extends React.Component {
         />
         <div className="answers">
           {this.state.journalEntries.map((entry, index) => (
-            <JournalEntry value={entry} id={index} key={entry.date} />
+            <JournalEntry entry={entry} id={index} key={entry.date} />
           ))}
         </div>
       </div>
