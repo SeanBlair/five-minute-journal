@@ -11,6 +11,7 @@ class App extends React.Component {
   // sections slightly different?
   // TODO: Fix answers border-radius when entry not full.
   // TODO: focus on first answer of new question on submit.
+  // TODO: Add a button to set a couple days of entries for demoing?
   constructor(props) {
     super(props);
     this.questions = [
