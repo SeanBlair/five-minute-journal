@@ -25,3 +25,11 @@ input {
 .odd {
   background-color: #f0f8ff;
 }
+
+.visible {
+  visibility: visible;
+}
+
+.hidden {
+  visibility: hidden;
+}

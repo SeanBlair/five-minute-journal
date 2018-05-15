@@ -9,7 +9,6 @@ class App extends React.Component {
   // TODO: select correct question to display given the time of day?
   // TODO: color same day's morning / night
   // sections slightly different?
-  // TODO: Add button to clear all journal entries from localStorage.
   // TODO: Fix answers border-radius when entry not full.
   // TODO: focus on first answer of new question on submit.
   constructor(props) {
@@ -41,6 +40,7 @@ class App extends React.Component {
     };
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.clearHistoricJournalState = this.clearHistoricJournalState.bind(this);
   }
 
   // Returns an array containg all the current question's answer strings
@@ -125,7 +125,18 @@ class App extends React.Component {
     });
   }
 
+  clearHistoricJournalState() {
+    localStorage.clear();
+    this.currentQuestionIndex = 0;
+    this.setState({
+      question: this.questions[this.currentQuestionIndex],
+      journalEntries: []
+    });
+  }
+
   render() {
+    const visibility =
+      this.state.journalEntries.length === 0 ? 'hidden' : 'visible';
     return (
       <div className="page">
         <h1 className="title">My Five Minute Journal </h1>
@@ -139,6 +150,14 @@ class App extends React.Component {
           {this.state.journalEntries.map((entry, index) => (
             <JournalEntry entry={entry} id={index} key={entry.date} />
           ))}
+        </div>
+        <div>
+          <button
+            onClick={this.clearHistoricJournalState}
+            className={visibility}
+          >
+            Clear entries
+          </button>
         </div>
       </div>
     );
