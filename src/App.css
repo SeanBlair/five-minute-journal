@@ -24,7 +24,7 @@ input {
 .answers div {
   padding: 1%;
   margin: 1%;
-  border-radius: 2%;
+  border-radius: 0.7rem;
 }
 
 .odd {

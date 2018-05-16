@@ -3,6 +3,7 @@ import React from 'react';
 class Question extends React.Component {
   constructor(props) {
     super(props);
+    this.textInput = React.createRef();
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
@@ -16,6 +17,7 @@ class Question extends React.Component {
   handleSubmit(event) {
     this.props.onSubmit();
     event.preventDefault();
+    this.textInput.current.focus();
   }
 
   render() {
@@ -29,6 +31,7 @@ class Question extends React.Component {
               type="text"
               value={this.props.answers.first}
               onChange={this.handleInputChange}
+              ref={this.textInput}
             />
           </p>
           <p>

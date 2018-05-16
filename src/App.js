@@ -10,8 +10,8 @@ class App extends React.Component {
   // TODO: color same day's morning / night
   // sections slightly different?
   // TODO: Fix answers border-radius when entry not full.
-  // TODO: focus on first answer of new question on submit.
   // TODO: Add a button to set a couple days of entries for demoing?
+  // TODO: Edit readme to explain what the project is, how to run it.
   constructor(props) {
     super(props);
     this.questions = [
@@ -157,7 +157,7 @@ class App extends React.Component {
             onClick={this.clearHistoricJournalState}
             className={visibility}
           >
-            Clear entries
+            Clear all entries
           </button>
         </div>
       </div>
