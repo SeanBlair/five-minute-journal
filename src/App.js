@@ -9,9 +9,7 @@ class App extends React.Component {
   // TODO: select correct question to display given the time of day?
   // TODO: color same day's morning / night
   // sections slightly different?
-  // TODO: Fix answers border-radius when entry not full.
-  // TODO: Add a button to set a couple days of entries for demoing?
-  // TODO: Edit readme to explain what the project is, how to run it.
+  // TODO: Add a button to set a couple days of entries for demoing a fresh app?
   constructor(props) {
     super(props);
     this.questions = [
@@ -22,6 +20,7 @@ class App extends React.Component {
       journalQuestions.better
     ];
     this.currentQuestionIndex = 0;
+    // TODO: refactor this to function getHistoricJournalState();
     // Get journal state prior to this page load.
     let historicJournalState = localStorage.getItem('historicJournalState');
     // No previous journal entries saved.
@@ -126,6 +125,7 @@ class App extends React.Component {
     });
   }
 
+  // Resets app by deleting localStorage data setting initial question
   clearHistoricJournalState() {
     localStorage.clear();
     this.currentQuestionIndex = 0;
