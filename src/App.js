@@ -6,9 +6,8 @@ import JournalEntry from './JournalEntry';
 import journalQuestions from './journal-questions';
 
 class App extends React.Component {
-  // TODO: select correct question to display given the time of day?
-  // TODO: color same day's morning / night
-  // sections slightly different?
+  // TODO: Implement different users that can sign in and see their entries.
+  // TODO: color same day's morning / night sections slightly different?
   // TODO: Add a button to set a couple days of entries for demoing a fresh app?
   constructor(props) {
     super(props);
@@ -19,39 +18,47 @@ class App extends React.Component {
       journalQuestions.amazing,
       journalQuestions.better
     ];
-    this.currentQuestionIndex = 0;
-    // TODO: refactor this to function getHistoricJournalState();
-    // Get journal state prior to this page load.
-    let historicJournalState = localStorage.getItem('historicJournalState');
-    // No previous journal entries saved.
-    if (!historicJournalState) {
-      historicJournalState = {
-        currentQuestionIndex: this.currentQuestionIndex,
+    let journalState = localStorage.getItem('historicJournalState');
+    if (!journalState) {
+      journalState = {
+        currentQuestionIndex: 0,
         entries: []
       };
     } else {
-      historicJournalState = JSON.parse(historicJournalState);
-      this.currentQuestionIndex = historicJournalState.currentQuestionIndex;
+      journalState = JSON.parse(journalState);
     }
-
+    this.currentQuestionIndex = journalState.currentQuestionIndex;
+    const currentQuestion = this.getCurrentQuestion(journalState.entries);
     this.state = {
-      question: this.questions[this.currentQuestionIndex],
-      journalEntries: historicJournalState.entries
+      question: currentQuestion,
+      journalEntries: journalState.entries
     };
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.clearHistoricJournalState = this.clearHistoricJournalState.bind(this);
   }
 
+  // Returns the current question with previous answers if they exist.
+  getCurrentQuestion(entries) {
+    const currentQuestion = JSON.parse(JSON.stringify(this.questions[this.currentQuestionIndex]));
+    if (entries.length > 0 && entries[0].date === new Date().toDateString()) {
+      const previousAnswers = entries[0][currentQuestion.name];
+      if (previousAnswers) {
+        currentQuestion.answers.first = previousAnswers[0];
+        currentQuestion.answers.second = previousAnswers[1];
+        if (currentQuestion.answers.third !== undefined) {
+          currentQuestion.answers.third = previousAnswers[2];
+        }
+      }
+    }
+    return currentQuestion;
+  }
+
   // Returns an array containg all the current question's answer strings
   getAnswersArray() {
-    const answersArray = [
-      this.state.question.answers.first,
-      this.state.question.answers.second
-    ];
-    if (this.state.question.answers.third) {
-      answersArray.push(this.state.question.answers.third);
-    }
+    const answersArray = [];
+    Object.values(this.state.question.answers).forEach(answer =>
+      answersArray.push(answer));
     return answersArray;
   }
 
@@ -119,8 +126,9 @@ class App extends React.Component {
       'historicJournalState',
       JSON.stringify(updatedJournalState)
     );
+    const nextQuestion = this.getCurrentQuestion(updatedEntries);
     this.setState({
-      question: this.questions[this.currentQuestionIndex],
+      question: nextQuestion,
       journalEntries: updatedEntries
     });
   }
@@ -130,7 +138,7 @@ class App extends React.Component {
     localStorage.clear();
     this.currentQuestionIndex = 0;
     this.setState({
-      question: this.questions[this.currentQuestionIndex],
+      question: JSON.parse(JSON.stringify(this.questions[this.currentQuestionIndex])),
       journalEntries: []
     });
   }
