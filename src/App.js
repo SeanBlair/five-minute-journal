@@ -10,6 +10,8 @@ class App extends React.Component {
   // TODO refactor for clarity
   // TODO add button that is only visible for guest, that adds two days of generic entries.
   // TODO: color same day's morning / night sections slightly different?
+  // TODO: Make first entry in list alternate colors, do not recompute based on
+  // location in entries array, set as a function of the array length when created.
   constructor(props) {
     super(props);
     this.questions = [
@@ -21,37 +23,42 @@ class App extends React.Component {
     ];
     this.genericUsername = 'Guest';
     this.currentUserKey = 'currentUser';
-    this.currentUser = localStorage.getItem(this.currentUserKey);
-    // First time app used from this browser.
-    if (!this.currentUser) {
-      this.currentUser = this.genericUsername;
+    let currentUser = localStorage.getItem(this.currentUserKey);
+    // First time app used from this browser. Set demo state.
+    if (!currentUser) {
+      currentUser = this.genericUsername;
       this.userJournal = {
         currentQuestionIndex: 0,
         entries: DEMO_ENTRIES_2_DAYS
       };
+      // Set initial localStorage data
+      localStorage.setItem(this.currentUserKey, currentUser);
+      localStorage.setItem(currentUser, JSON.stringify(this.userJournal));
     } else {
-      this.userJournal = JSON.parse(localStorage.getItem(this.currentUser));
+      this.userJournal = JSON.parse(localStorage.getItem(currentUser));
     }
-    this.currentQuestionIndex = this.userJournal.currentQuestionIndex;
-    const currentQuestion = this.getCurrentQuestion(this.userJournal.entries);
     // This stores state that determines ui elements
     this.state = {
-      user: this.currentUser,
-      question: currentQuestion,
+      user: currentUser,
+      question: this.getCurrentQuestion(),
       journalEntries: this.userJournal.entries
     };
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
-    this.clearHistoricJournalState = this.clearHistoricJournalState.bind(this);
+    this.clearAllUserJournalEntries = this.clearAllUserJournalEntries.bind(this);
     this.signIn = this.signIn.bind(this);
     this.signOut = this.signOut.bind(this);
   }
 
-  // Returns the current question with previous answers if they exist.
-  getCurrentQuestion(entries) {
-    const currentQuestion = JSON.parse(JSON.stringify(this.questions[this.currentQuestionIndex]));
+  // Returns a new object representing the current question with
+  // previous answers if they have already been answered today.
+  getCurrentQuestion() {
+    let currentQuestion = this.questions[this.userJournal.currentQuestionIndex];
+    currentQuestion = JSON.parse(JSON.stringify(currentQuestion));
+    const entries = this.userJournal.entries;
     if (entries.length > 0 && entries[0].date === new Date().toDateString()) {
       const previousAnswers = entries[0][currentQuestion.name];
+      // TODO clean up this code to not use hard coded indexes.
       if (previousAnswers) {
         currentQuestion.answers.first = previousAnswers[0];
         currentQuestion.answers.second = previousAnswers[1];
@@ -102,13 +109,12 @@ class App extends React.Component {
     return updatedEntries;
   }
 
-  // Sets the index of the next question to display.
-  incrementCurrentQuestionIndex() {
-    if (this.currentQuestionIndex === this.questions.length - 1) {
-      this.currentQuestionIndex = 0;
-    } else {
-      this.currentQuestionIndex++;
+  // Returns the index of the next question to display.
+  getNextQuestionIndex() {
+    if (this.userJournal.currentQuestionIndex === this.questions.length - 1) {
+      return 0;
     }
+    return this.userJournal.currentQuestionIndex + 1;
   }
 
   // Adds one character to one of the current question's answers
@@ -124,34 +130,31 @@ class App extends React.Component {
   // Adds the current question's answers to the journal, displays
   // the next question and updates the localStorage data.
   handleSubmit() {
-    const updatedEntries = this.getUpdatedEntries();
-    this.incrementCurrentQuestionIndex();
     this.userJournal = {
-      currentQuestionIndex: this.currentQuestionIndex,
-      entries: updatedEntries
+      currentQuestionIndex: this.getNextQuestionIndex(),
+      entries: this.getUpdatedEntries()
     };
     localStorage.setItem(this.state.user, JSON.stringify(this.userJournal));
-    const nextQuestion = this.getCurrentQuestion(updatedEntries);
     this.setState({
-      question: nextQuestion,
-      journalEntries: updatedEntries
+      question: this.getCurrentQuestion(),
+      journalEntries: this.userJournal.entries
     });
   }
 
-  // Resets app by deleting localStorage data setting initial question
-  clearHistoricJournalState() {
-    this.currentQuestionIndex = 0;
-    const emptyUserJournal = {
-      currentQuestionIndex: this.currentQuestionIndex,
+  // Resets user's journal by deleting all previous entries.
+  clearAllUserJournalEntries() {
+    this.userJournal = {
+      currentQuestionIndex: 0,
       entries: []
     };
-    localStorage.setItem(this.state.user, JSON.stringify(emptyUserJournal));
+    localStorage.setItem(this.state.user, JSON.stringify(this.userJournal));
     this.setState({
-      question: JSON.parse(JSON.stringify(this.questions[this.currentQuestionIndex])),
+      question: JSON.parse(JSON.stringify(this.questions[0])),
       journalEntries: []
     });
   }
 
+  // Shows a prompt for user to enter name, display the user's journal
   signIn() {
     const user = prompt('Please enter your name', 'Joe Shmoe');
     localStorage.setItem(this.currentUserKey, user);
@@ -161,31 +164,25 @@ class App extends React.Component {
         currentQuestionIndex: 0,
         entries: []
       };
+      localStorage.setItem(user, JSON.stringify(this.userJournal));
     } else {
       this.userJournal = JSON.parse(this.userJournal);
-      this.currentQuestionIndex = this.userJournal.currentQuestionIndex;
     }
-    const question = this.getCurrentQuestion(this.userJournal.entries);
     this.setState({
       user,
-      question,
+      question: this.getCurrentQuestion(),
       journalEntries: this.userJournal.entries
     });
   }
 
+  // Displays the generic user's journal
   signOut() {
     localStorage.setItem(this.currentUserKey, this.genericUsername);
-    // TODO figure out best way to transition back to generic user:
-    // Reset journal entries to DEMO_ENTRIES_2_DAYS or leave as was...
-    // On page reload, show any generic user's saved changes or the 
-    // static 2 days demo data.??  Idea, make it as similar to regular
-    // users in order to demo all functionality withou showing people
-    // personal journal entries.
-    this.currentQuestionIndex = 0;
+    this.userJournal = JSON.parse(localStorage.getItem(this.genericUsername));
     this.setState({
       user: this.genericUsername,
-      question: JSON.parse(JSON.stringify(this.questions[this.currentQuestionIndex])),
-      journalEntries: DEMO_ENTRIES_2_DAYS
+      question: this.getCurrentQuestion(),
+      journalEntries: this.userJournal.entries
     });
   }
 
@@ -214,7 +211,7 @@ class App extends React.Component {
         </div>
         <div>
           <button
-            onClick={this.clearHistoricJournalState}
+            onClick={this.clearAllUserJournalEntries}
             className={isSomeEntry ? 'visible' : 'hidden'}
           >
             Clear all entries
