@@ -92,6 +92,7 @@ class App extends React.Component {
     if (this.state.journalEntries.length === 0) {
       updatedEntries = [
         {
+          id: 0,
           date: today,
           [this.state.question.name]: answers
         }
@@ -102,7 +103,13 @@ class App extends React.Component {
       if (today !== lastEntryDate) {
         // add new entry to journalEntries
         updatedEntries = update(this.state.journalEntries, {
-          $unshift: [{ date: today, [this.state.question.name]: answers }]
+          $unshift: [
+            {
+              id: this.state.journalEntries.length,
+              date: today,
+              [this.state.question.name]: answers
+            }
+          ]
         });
       } else {
         // Today's entry has already been started.
@@ -227,8 +234,8 @@ class App extends React.Component {
           onSubmit={this.handleSubmit}
         />
         <div className="answers">
-          {this.state.journalEntries.map((entry, index) => (
-            <JournalEntry entry={entry} id={index} key={entry.date} />
+          {this.state.journalEntries.map(entry => (
+            <JournalEntry entry={entry} key={entry.date} />
           ))}
         </div>
         <div>

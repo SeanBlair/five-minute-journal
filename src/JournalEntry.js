@@ -3,7 +3,7 @@ import journalQuestions from './journal-questions';
 import AnsweredQuestion from './AnsweredQuestion';
 
 function JournalEntry(props) {
-  const evenOrOdd = props.id % 2 === 0 ? 'even' : 'odd';
+  const evenOrOdd = props.entry.id % 2 === 0 ? 'even' : 'odd';
   return (
     <div className={evenOrOdd}>
       <h2>{props.entry.date}</h2>

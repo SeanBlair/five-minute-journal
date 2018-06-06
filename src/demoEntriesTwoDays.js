@@ -7,6 +7,7 @@ dayBeforeYesterday = dayBeforeYesterday.toDateString();
 
 const DEMO_ENTRIES_2_DAYS = [
   {
+    id: 1,
     date: yesterday,
     amazing: [
       'Did the phsysical activity goal I have been working on for a while!',
@@ -23,6 +24,7 @@ const DEMO_ENTRIES_2_DAYS = [
     affirmations: ['reasonably smart', 'a hard worker']
   },
   {
+    id: 0,
     date: dayBeforeYesterday,
     amazing: [
       'Finished that super important thing that was on my TODO list for a while',
