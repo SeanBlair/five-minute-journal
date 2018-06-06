@@ -8,10 +8,6 @@ import DEMO_ENTRIES_2_DAYS from './demoEntriesTwoDays';
 
 class App extends React.Component {
   // TODO refactor for clarity
-  // TODO: color same day's morning / night sections slightly different?
-  // TODO: Make first entry in list alternate colors, do not recompute based on
-  // location in entries array, set as a function of the array length when created.
-  // TODO: add a link to 5 minute journal description
   // TODO: add a link to the code?? My linked in?? my github??
   // TODO: make the app look nicer/cooler with css.
   // TODO: make the app mobile friendly, supported by basic tech. Transpile!! to make it work on
@@ -220,6 +216,7 @@ class App extends React.Component {
       this.state.journalEntries.length < 2;
     return (
       <div className="page">
+        <a href="https://en.wikipedia.org/wiki/Gratitude_journal">?</a>
         <button onClick={this.signIn} className={isSignedIn ? 'hide' : 'show'}>
           Sign In
         </button>

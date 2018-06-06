@@ -50,3 +50,12 @@ input {
 .hide {
   display: none;
 }
+
+a {
+  float: right;
+  margin-right: 2%;
+}
+
+button {
+  margin: 2%;
+}
