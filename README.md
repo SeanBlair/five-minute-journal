@@ -3,6 +3,7 @@
 For reminding yourself of some helpful things, which can result in a more comfortable state of mind.
 
 This is a simple application I created to practice using the React tool.
+[Check it out](https://seanblair.github.io/five-minute-journal/)
 
 ## Requirements
 
@@ -22,8 +23,8 @@ To try out the app locally, you need Node.js and git installed on your environme
 
 ### JavaScript
 
-* [React](https://reactjs.org/) for efficiently and intuitively creating a user interface.
-* [immutability-helper](https://github.com/kolodny/immutability-helper) for updating a copy of the application's state object without mutating the original.
+- [React](https://reactjs.org/) for efficiently and intuitively creating a user interface.
+- [immutability-helper](https://github.com/kolodny/immutability-helper) for updating a copy of the application's state object without mutating the original.
 
 ### HTML
 
