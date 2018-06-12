@@ -8,10 +8,7 @@ import DEMO_ENTRIES_2_DAYS from './demoEntriesTwoDays';
 
 class App extends React.Component {
   // TODO refactor for clarity
-  // TODO: add a link to the code?? My linked in?? my github??
   // TODO: make the app look nicer/cooler with css.
-  // TODO: make the app mobile friendly, supported by basic tech. Transpile!! to make it work on
-  // old browsers.
   constructor(props) {
     super(props);
     this.questions = [
@@ -35,9 +32,10 @@ class App extends React.Component {
       localStorage.setItem(this.currentUserKey, currentUser);
       localStorage.setItem(currentUser, JSON.stringify(this.userJournal));
     } else {
+      // load saved journal state
       this.userJournal = JSON.parse(localStorage.getItem(currentUser));
     }
-    // This stores state that determines ui elements
+    // stores state that determines ui elements
     this.state = {
       user: currentUser,
       question: this.getCurrentQuestion(),
@@ -54,12 +52,16 @@ class App extends React.Component {
   // Returns a new object representing the current question with
   // previous answers if they have already been answered today.
   getCurrentQuestion() {
+    const entries = this.userJournal.entries;
+    const todaysEntryExists =
+      entries.length > 0 && entries[0].date === new Date().toDateString();
+    if (!todaysEntryExists) {
+      this.userJournal.currentQuestionIndex = 0;
+    }
     let currentQuestion = this.questions[this.userJournal.currentQuestionIndex];
     currentQuestion = JSON.parse(JSON.stringify(currentQuestion));
-    const entries = this.userJournal.entries;
-    if (entries.length > 0 && entries[0].date === new Date().toDateString()) {
+    if (todaysEntryExists) {
       const previousAnswers = entries[0][currentQuestion.name];
-      // TODO clean up this code to not use hard coded indexes.
       if (previousAnswers) {
         currentQuestion.answers.first = previousAnswers[0];
         currentQuestion.answers.second = previousAnswers[1];
