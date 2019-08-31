@@ -29,6 +29,7 @@ class Question extends React.Component {
             <input
               name="first"
               type="text"
+              autoComplete="off"
               value={this.props.answers.first}
               onChange={this.handleInputChange}
               ref={this.textInput}
@@ -38,6 +39,7 @@ class Question extends React.Component {
             <input
               name="second"
               type="text"
+              autoComplete="off"
               value={this.props.answers.second}
               onChange={this.handleInputChange}
             />
@@ -47,6 +49,7 @@ class Question extends React.Component {
               <input
                 name="third"
                 type="text"
+                autoComplete="off"
                 value={this.props.answers.third}
                 onChange={this.handleInputChange}
               />
